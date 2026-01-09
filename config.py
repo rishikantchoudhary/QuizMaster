@@ -1,9 +1,18 @@
-from dotenv import load_dotenv
 import os
-from app import app
+from dotenv import load_dotenv
 
 load_dotenv()
 
-app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('SQLALCHEMY_DATABASE_URI')
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = os.getenv('SQLALCHEMY_TRACK_MODIFICATIONS')
-app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
+basedir = os.path.abspath(os.path.dirname(__file__))
+
+class Config:
+    SECRET_KEY = os.environ.get('SECRET_KEY') or 'dev-key-for-local-testing'
+    
+    SQLALCHEMY_TRACK_MODIFICATIONS = os.environ.get('SQLALCHEMY_TRACK_MODIFICATIONS') == 'true'
+
+    uri = os.environ.get('SQLALCHEMY_DATABASE_URI')
+    if uri and uri.startswith('sqlite:///'):
+        db_name = uri.split('sqlite:///')[-1]
+        SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(basedir, db_name)
+    else:
+        SQLALCHEMY_DATABASE_URI = uri or 'sqlite:///' + os.path.join(basedir, 'db.sqlite3')
