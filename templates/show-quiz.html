@@ -1,0 +1,112 @@
+{% extends "base.html" %} {% block title %}Show Quiz | Quiz Master{% endblock %}
+{% block stylesheet %}
+<link rel="stylesheet" href="{{ url_for('static', filename='navbar.css') }}" />
+<style>
+  main {
+    margin: 4rem 0;
+    padding: 0.5rem;
+    min-height: 50vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #f3ffff;
+    border-radius: 0.5rem;
+  }
+
+  .sub-header {
+    margin: 3rem 0;
+    width: 90%;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .sub-header h2 {
+    font-size: 1.5rem;
+  }
+
+  .sub-header button {
+    padding: 7px 15px 5px;
+    font-size: 1rem;
+    background-color: #68b4e2;
+    color: #fff;
+    border: none;
+    border-radius: 0.25rem;
+    cursor: pointer;
+  }
+
+  .sub-header button:hover {
+    background-color: #4f9ecb;
+  }
+
+  .quiz-content {
+    margin-bottom: 2rem;
+    width: 80%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    font-size: 1.1rem;
+  }
+
+  .quiz-content p b {
+    text-align: right;
+    display: block;
+  }
+
+  .quiz-content p {
+    margin: 0.25rem;
+  }
+</style>
+{% endblock %} {% block navbar %}
+<header>
+  <div class="header-container">
+    <h1>Quiz Master</h1>
+    <nav>
+      <ul>
+        <li>
+          <a href="/dashboard">Home</a>
+        </li>
+        <li>
+          <a href="/score">Score</a>
+        </li>
+        <li>
+          <a href="/summary">Summary</a>
+        </li>
+        <li>
+          <a href="/logout">Log out</a>
+        </li>
+      </ul>
+    </nav>
+    <a href="/profile">Welcome, {{ user.fullname}}</a>
+  </div>
+</header>
+{% endblock %} {% block content %}
+<main>
+  <div class="sub-header">
+    <h2>Quiz details:</h2>
+    <button onclick="goBack()">Go back</button>
+  </div>
+  <div class="quiz-content">
+    <p><b>Id :</b></p>
+    <p>{{quiz.quizid}}</p>
+    <p><b>Quiz name :</b></p>
+    <p>{{quiz.quizname}}</p>
+    <p><b>Subject :</b></p>
+    <p>{{subject.subjectname}}</p>
+    <p><b>No of questons :</b></p>
+    <p>{{quiz.questions | length }}</p>
+    <p><b>Created on:</b></p>
+    <p>{{quiz.quizdate}}</p>
+    <p><b>Duration :</b></p>
+    <p>{{quiz.duration}} mins</p>
+    <p>
+      <b>Subject Description :</b>
+    </p>
+    <p>{{subject.subjectdesc}}</p>
+  </div>
+</main>
+{% endblock %} {% block script %}
+<script>
+  function goBack() {
+    window.history.back()
+  }
+</script>
+{% endblock %}

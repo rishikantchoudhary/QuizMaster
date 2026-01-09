@@ -1,0 +1,164 @@
+{% extends "base.html" %} {% block title %}Manage Users | Quiz Master{% endblock
+%} {% block stylesheet %}
+<link rel="stylesheet" href="{{ url_for('static', filename='navbar.css') }}" />
+<style>
+  main {
+    margin: 4rem 0;
+    padding: 0.5rem;
+    min-height: 50vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #f3ffff;
+    border-radius: 1rem;
+  }
+
+  h2 {
+    font-size: 2rem;
+    margin: 2rem 0 1.5rem;
+  }
+
+  table {
+    width: 90%;
+    border-collapse: collapse;
+    margin-bottom: 3rem;
+  }
+
+  th,
+  td {
+    border: 1px solid #ccc;
+    padding: 8px;
+    text-align: center;
+  }
+
+  button {
+    padding: 7px 15px 5px;
+    color: #fff;
+    border: none;
+    border-radius: 0.25rem;
+    cursor: pointer;
+  }
+
+  .blue {
+    background-color: #68b4e2;
+  }
+
+  .blue:hover {
+    background-color: #5095d1;
+  }
+
+  .green {
+    background-color: #4caf50;
+  }
+
+  .green:hover {
+    background-color: #429846;
+  }
+
+  .red {
+    background-color: #f44;
+  }
+
+  .red:hover {
+    background-color: rgb(219, 48, 48);
+  }
+</style>
+{% endblock %} {% block navbar %}
+<header>
+  <div class="header-container">
+    <h1>Quiz Master</h1>
+    <nav>
+      <ul>
+        <li>
+          <a href="/admin-dashboard">Home</a>
+        </li>
+        <li>
+          <a href="/admin-quiz">Quiz</a>
+        </li>
+        <li>
+          <a href="/manage-users">Manage</a>
+        </li>
+        <li>
+          <a href="/admin-summary">Summary</a>
+        </li>
+        <li>
+          <a href="/logout">Log out</a>
+        </li>
+      </ul>
+    </nav>
+    <a href="/profile">Welcome, {{ user.fullname}}</a>
+  </div>
+</header>
+{% endblock %} {% block content %}
+<main>
+  <h2>Manage Users</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>S.No</th>
+        <th>Username</th>
+        <th>Name</th>
+        <th>DOB</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for user in users %}
+      <tr>
+        <td>{{ loop.index }}</td>
+        <td>{{ user.username }}</td>
+        <td>{{ user.fullname }}</td>
+        <td>{{ user.dob }}</td>
+        <td>
+          {% if user.is_ban %}
+          <button class="green" onclick="unbanUser({{ user.id }})">
+            Unban
+          </button>
+          {% else %}
+          <button class="blue" onclick="banUser({{ user.id }})">Ban</button>
+          {% endif %}
+          <button class="red" onclick="deleteUser({{ user.id }})">
+            Delete
+          </button>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</main>
+{% endblock %} {% block script %}
+<script>
+  function deleteUser(id) {
+    fetch(`/delete-user`, {
+      method: 'POST',
+      body: JSON.stringify({ user_id: id }),
+    }).then((res) => {
+      if (res.ok) {
+        window.location.href = '/manage-users'
+      }
+    })
+  }
+
+  function banUser(id) {
+    fetch(`/ban-user`, {
+      method: 'POST',
+      body: JSON.stringify({ user_id: id }),
+    }).then((res) => {
+      if (res.ok) {
+        window.location.href = '/manage-users'
+      }
+    })
+  }
+
+  function unbanUser(id) {
+    fetch(`/unban-user`, {
+      method: 'POST',
+      body: JSON.stringify({ user_id: id }),
+    }).then((res) => {
+      if (res.ok) {
+        window.location.href = '/manage-users'
+      }
+    })
+  }
+</script>
+{% endblock %}

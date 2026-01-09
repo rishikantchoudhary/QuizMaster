@@ -1,0 +1,160 @@
+{% extends "base.html" %} {% block title %}Summary | Quiz Master{% endblock %}
+{% block stylesheet %}
+<link rel="stylesheet" href="{{ url_for('static', filename='navbar.css') }}" />
+<style>
+  main {
+    margin: 4rem 0;
+    padding: 3rem 0;
+    min-height: 50vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #f3ffff;
+    border-radius: 0.5rem;
+  }
+
+  h2 {
+    margin: 0 0 2rem;
+    font-size: 2rem;
+  }
+
+  h3 {
+    margin: 0 2rem;
+    font-size: 1rem;
+  }
+
+  .chart-card {
+    padding: 2rem;
+    box-shadow: 0 0 0.6rem #ccc;
+    border-radius: 1rem;
+  }
+
+  hr {
+    display: block;
+    height: 1px;
+    border: 0;
+    border-top: 1px solid #ccc;
+    margin: 2rem 0;
+    padding: 0;
+  }
+</style>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js"></script>
+{% endblock %} {% block navbar %}
+<header>
+  <div class="header-container">
+    <h1>Quiz Master</h1>
+    <nav>
+      <ul>
+        <li>
+          <a href="/dashboard">Home</a>
+        </li>
+        <li>
+          <a href="/score">Score</a>
+        </li>
+        <li>
+          <a href="/summary">Summary</a>
+        </li>
+        <li>
+          <a href="/logout">Log out</a>
+        </li>
+      </ul>
+    </nav>
+    <a href="/profile">Welcome, {{ user.fullname}}</a>
+  </div>
+</header>
+{% endblock %} {% block content %}
+<main>
+  <h2>Hello {{user.fullname}}, Here's your Summary</h2>
+  <div class="chart-section">
+    <div class="chart-card">
+      <h3>Average marks in each Quiz.</h3>
+      <canvas id="chart1" width="900" height="500"></canvas>
+    </div>
+    <hr />
+    <div class="chart-card">
+      <h3>Average marks in each subject.</h3>
+      <canvas id="chart2" width="900" height="500"></canvas>
+    </div>
+  </div>
+</main>
+{% endblock %} {% block script %}
+<script>
+  const label1 = {{data[0][0] | safe}}
+  const data1 = {{data[0][1] | safe}}
+  const label2 = {{data[1][0] | safe}}
+  const data2 = {{data[1][1] | safe}}
+
+  const config1 = {
+    type: 'pie',
+    data: {
+      labels: label1,
+      datasets: [
+        {
+          label: 'Average Marks',
+          data: data1,
+          backgroundColor: [
+            'rgba(255, 99, 132, 0.4)',
+            'rgba(255, 205, 86, 0.4)',
+            'rgba(75, 192, 192, 0.4)',
+            'rgba(153, 102, 255, 0.4)',
+            'rgba(201, 203, 207, 0.4)',
+          ],
+          borderColor: [
+            'rgb(255, 99, 132)',
+            'rgb(255, 205, 86)',
+            'rgb(75, 192, 192)',
+            'rgb(153, 102, 255)',
+            'rgb(201, 203, 207)',
+          ],
+          borderWidth: 1,
+        },
+      ],
+    },
+    options: {
+      responsive: false,
+    },
+  }
+
+  const config2 = {
+    type: 'bar',
+    data: {
+      labels: label2,
+      datasets: [
+        {
+          label: 'Average Marks',
+          data: data2,
+          backgroundColor: [
+            'rgba(255, 99, 132, 0.4)',
+            'rgba(255, 205, 86, 0.4)',
+            'rgba(75, 192, 192, 0.4)',
+            'rgba(153, 102, 255, 0.4)',
+            'rgba(201, 203, 207, 0.4)',
+          ],
+          borderColor: [
+            'rgb(255, 99, 132)',
+            'rgb(255, 205, 86)',
+            'rgb(75, 192, 192)',
+            'rgb(153, 102, 255)',
+            'rgb(201, 203, 207)',
+          ],
+          borderWidth: 1,
+        },
+      ],
+    },
+    options: {
+      responsive: false,
+      scales: {
+        y: {
+          beginAtZero: true,
+        },
+      },
+    },
+  }
+
+  let ctx1 = document.getElementById('chart1').getContext('2d')
+  let ctx2 = document.getElementById('chart2').getContext('2d')
+
+  let chart1 = new Chart(ctx1, config1)
+  let chart2 = new Chart(ctx2, config2)
+</script>
+{% endblock %}

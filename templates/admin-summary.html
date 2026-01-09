@@ -1,0 +1,231 @@
+{% extends "base.html" %} {% block title %}Admin Summary | Quiz Master{%
+endblock %} {% block stylesheet %}
+<link rel="stylesheet" href="{{ url_for('static', filename='navbar.css') }}" />
+<style>
+  main {
+    margin: 4rem 0;
+    padding: 3rem 0;
+    min-height: 50vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #f3ffff;
+    border-radius: 0.5rem;
+  }
+
+  h2 {
+    margin: 0 0 2rem;
+    font-size: 2rem;
+  }
+
+  h3 {
+    margin: 0 2rem;
+    font-size: 1rem;
+  }
+
+  .chart-card {
+    padding: 2rem;
+    box-shadow: 0 0 0.6rem #ccc;
+    border-radius: 1rem;
+  }
+
+  hr {
+    display: block;
+    height: 1px;
+    border: 0;
+    border-top: 1px solid #ccc;
+    margin: 2rem 0;
+    padding: 0;
+  }
+</style>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js"></script>
+{% endblock %} {% block navbar %}
+<header>
+  <div class="header-container">
+    <h1>Quiz Master</h1>
+    <nav>
+      <ul>
+        <li>
+          <a href="/admin-dashboard">Home</a>
+        </li>
+        <li>
+          <a href="/admin-quiz">Quiz</a>
+        </li>
+        <li>
+          <a href="/manage-users">Manage</a>
+        </li>
+        <li>
+          <a href="/admin-summary">Summary</a>
+        </li>
+        <li>
+          <a href="/logout">Log out</a>
+        </li>
+      </ul>
+    </nav>
+    <a href="/profile">Welcome, {{ user.fullname}}</a>
+  </div>
+</header>
+{% endblock %} {% block content %}
+<main>
+  <h2>Admin Summary</h2>
+  <div class="chart-section">
+    <div class="chart-card">
+      <h3>No. of Quizzes in each Subject.</h3>
+      <canvas id="chart1" width="900" height="500"></canvas>
+    </div>
+    <hr />
+    <div class="chart-card">
+      <h3>No. of Questions in each Chapter.</h3>
+      <canvas id="chart2" width="900" height="500"></canvas>
+    </div>
+    <hr />
+    <div class="chart-card">
+      <h3>No of Users grouped by scores.</h3>
+      <canvas id="chart3" width="900" height="500"></canvas>
+    </div>
+    <hr />
+    <div class="chart-card">
+      <h3>No of Users grouped by Qualifications.</h3>
+      <canvas id="chart4" width="900" height="500"></canvas>
+    </div>
+  </div>
+</main>
+{% endblock %} {% block script %}
+<script>
+  const label1 = {{data[0][0] | safe}}
+  const data1 = {{data[0][1] | safe}}
+  const label2 = {{data[1][0] | safe}}
+  const data2 = {{data[1][1] | safe}}
+  const label3 = {{data[2][0] | safe}}
+  const data3 = {{data[2][1] | safe}}
+  const label4 = {{data[3][0] | safe}}
+  const data4 = {{data[3][1] | safe}}
+
+  const config1 = {
+    type: 'bar',
+    data: {
+    labels: label1,
+    datasets: [{
+      label: 'Subject Vs No of Quizzes',
+      data: data1,
+      backgroundColor: [
+        'rgba(255, 99, 132, 0.4)',
+        'rgba(255, 205, 86, 0.4)',
+        'rgba(75, 192, 192, 0.4)',
+        'rgba(153, 102, 255, 0.4)',
+      ],
+      borderColor: [
+        'rgb(255, 99, 132)',
+        'rgb(255, 205, 86)',
+        'rgb(75, 192, 192)',
+        'rgb(153, 102, 255)',
+      ],
+      borderWidth: 1
+    }]
+  },
+    options: {
+      responsive: false,
+      scales: {
+        y: {
+          beginAtZero: true
+        }
+      }
+    },
+  }
+  const config2 = {
+    type: 'bar',
+    data: {
+    labels: label2,
+    datasets: [{
+      label: 'Chapter Vs No of Questions',
+      data: data2,
+      backgroundColor: [
+        'rgba(255, 99, 132, 0.4)',
+        'rgba(255, 205, 86, 0.4)',
+        'rgba(75, 192, 192, 0.4)',
+        'rgba(153, 102, 255, 0.4)',
+      ],
+      borderColor: [
+        'rgb(255, 99, 132)',
+        'rgb(255, 205, 86)',
+        'rgb(75, 192, 192)',
+        'rgb(153, 102, 255)',
+      ],
+      borderWidth: 1
+    }]
+  },
+    options: {
+      responsive: false,
+      scales: {
+        y: {
+          beginAtZero: true
+        }
+      }
+    },
+  }
+  const config3 = {
+    type: 'doughnut',
+    data: {
+    labels: label3,
+    datasets: [{
+      label: 'No of User got',
+      data: data3,
+      backgroundColor: [
+        'rgba(255, 99, 132, 0.4)',
+        'rgba(255, 205, 86, 0.4)',
+        'rgba(75, 192, 192, 0.4)',
+        'rgba(153, 102, 255, 0.4)',
+      ],
+      borderColor: [
+        'rgb(255, 99, 132)',
+        'rgb(255, 205, 86)',
+        'rgb(75, 192, 192)',
+        'rgb(153, 102, 255)',
+      ],
+      borderWidth: 1
+    }]
+  },
+    options: {
+      responsive: false,
+    },
+  }
+  const config4 = {
+    type: 'pie',
+    data: {
+    labels: label4,
+    datasets: [{
+      label: 'No of Users',
+      data: data4,
+      backgroundColor: [
+        'rgba(255, 99, 132, 0.4)',
+        'rgba(255, 205, 86, 0.4)',
+        'rgba(75, 192, 192, 0.4)',
+        'rgba(153, 102, 255, 0.4)',
+        'rgba(201, 203, 207, 0.4)'
+      ],
+      borderColor: [
+        'rgb(255, 99, 132)',
+        'rgb(255, 205, 86)',
+        'rgb(75, 192, 192)',
+        'rgb(153, 102, 255)',
+        'rgb(201, 203, 207)'
+      ],
+      borderWidth: 1
+    }]
+  },
+    options: {
+      responsive: false,
+    },
+  }
+
+  let ctx1 = document.getElementById('chart1').getContext("2d");
+  let ctx2 = document.getElementById('chart2').getContext("2d");
+  let ctx3 = document.getElementById('chart3').getContext("2d");
+  let ctx4 = document.getElementById('chart4').getContext("2d");
+
+  let chart1 = new Chart(ctx1, config1)
+  let chart2 = new Chart(ctx2, config2)
+  let chart3 = new Chart(ctx3, config3)
+  let chart4 = new Chart(ctx4, config4)
+</script>
+{% endblock %}
